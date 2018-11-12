@@ -11,7 +11,8 @@
 #import "NewsModel.h"
 #import "NewsDetailViewController.h"
 #import "UIColor+NewsCategory.h"
-
+#import "NewsInterfaceMacro.h"
+#import "NewInterfaceRequest.h"
 #import "Masonry.h"
 
 static NSString *const NewsCellID = @"NewsCellID";
@@ -25,14 +26,31 @@ UISearchBarDelegate
 @property (nonatomic, strong) UITableView *myTableView;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) NSMutableArray *dataArray;
+@property (nonatomic, assign) NSInteger page;
+@property (nonatomic, assign) NSInteger pageSize;
 
 @end
 
 @implementation NewsListViewController
 
+- (NSMutableArray *)dataArray {
+    if (!_dataArray) {
+        _dataArray = [[NSMutableArray alloc]init];
+    }
+    return _dataArray;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self configUI];
+    [self requestNewslistWithSearch:@""];
+}
+
+- (void)requestNewslistWithSearch:(NSString *)searchStr {
+    [NewInterfaceRequest requestNewsList:newslistParam([@(self.page) description], [@(self.pageSize) description], @"", @"", @"", searchStr) success:^(id json) {
+        self.dataArray = json;
+        [self.myTableView reloadData];
+    } failed:^(NSError *error) {}];
 }
 
 - (void)configUI {
@@ -70,7 +88,7 @@ UISearchBarDelegate
 
 #pragma mark - TableViewDelegate&&DataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
+    return self.dataArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -78,14 +96,16 @@ UISearchBarDelegate
     if (!cell) {
         cell = [[NewsListCellTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NewsCellID];
     }
-    cell.titleLabel.text = @"关于全面加强乡村小规模和乡镇寄宿制学校建设的指导意见";
-    cell.timeLabel.text = @"2018-02-08 12:30:00";
+    NewslistModel *model = self.dataArray[indexPath.row];
+    cell.titleLabel.text = model.title;
+    cell.timeLabel.text = model.createTime;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NewsDetailViewController *newsDetailVC = [[NewsDetailViewController alloc]init];
+    newsDetailVC.model = self.dataArray[indexPath.row];
     [self.navigationController pushViewController:newsDetailVC animated:YES];
 }
 

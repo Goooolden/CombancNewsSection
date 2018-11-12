@@ -9,6 +9,7 @@
 #import "NewsPageViewController.h"
 #import "NewsListViewController.h"
 #import "UIColor+NewsCategory.h"
+#import "NewsInterfaceMacro.h"
 
 @interface NewsPageViewController ()
 
@@ -35,6 +36,10 @@
         self.progressWidth = 40.0f;
     }
     return self;
+}
+
+- (void)setToken:(NSString *)token {
+    [[NSUserDefaults standardUserDefaults] setObject:token forKey:NewsToken];
 }
 
 - (NSArray *)titles {

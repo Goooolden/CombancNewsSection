@@ -10,4 +10,6 @@
 
 @interface NewsPageViewController : WMPageController
 
+@property (nonatomic, strong) NSString *token;
+
 @end
