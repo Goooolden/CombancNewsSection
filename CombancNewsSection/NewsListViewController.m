@@ -14,6 +14,7 @@
 #import "NewsInterfaceMacro.h"
 #import "NewInterfaceRequest.h"
 #import "Masonry.h"
+#import "MJRefresh.h"
 
 static NSString *const NewsCellID = @"NewsCellID";
 
@@ -42,15 +43,35 @@ UISearchBarDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.page = 1;
+    self.pageSize = 10;
     [self configUI];
     [self requestNewslistWithSearch:@""];
+    [self createRefresh];
+}
+
+- (void)createRefresh {
+    self.myTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        self.pageSize = 10;
+        [self requestNewslistWithSearch:@""];
+    }];
+    
+    self.myTableView.mj_footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        self.pageSize += 10;
+        [self requestNewslistWithSearch:@""];
+    }];
 }
 
 - (void)requestNewslistWithSearch:(NSString *)searchStr {
     [NewInterfaceRequest requestNewsList:newslistParam([@(self.page) description], [@(self.pageSize) description], @"", @"", @"", searchStr) success:^(id json) {
         self.dataArray = json;
         [self.myTableView reloadData];
-    } failed:^(NSError *error) {}];
+        [self.myTableView.mj_header endRefreshing];
+        [self.myTableView.mj_footer endRefreshing];
+    } failed:^(NSError *error) {
+        [self.myTableView.mj_header endRefreshing];
+        [self.myTableView.mj_footer endRefreshing];
+    }];
 }
 
 - (void)configUI {
@@ -118,10 +139,12 @@ UISearchBarDelegate
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
     [self.searchBar resignFirstResponder];
     [self.searchBar setShowsCancelButton:NO animated:YES];
+    [self requestNewslistWithSearch:@""];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [self.searchBar resignFirstResponder];
+    [self requestNewslistWithSearch:searchBar.text];
 }
 
 @end
