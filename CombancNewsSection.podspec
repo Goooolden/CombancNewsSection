@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "CombancNewsSection"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "OAOfficeNew"
 
   # This description is used to generate tags and improve search results.
@@ -80,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/Goooolden/CombancNewsSection.git", :tag => "0.0.2" }
+  s.source       = { :git => "https://github.com/Goooolden/CombancNewsSection.git", :tag => "0.0.3" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -134,5 +134,6 @@ Pod::Spec.new do |s|
   s.dependency "Masonry"
   s.dependency "MJExtension"
   s.dependency "CombancHttpTool"
+  s.dependency "MJRefresh"
 
 end
