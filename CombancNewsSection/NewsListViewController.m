@@ -43,6 +43,7 @@ UISearchBarDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.page = 1;
     self.pageSize = 10;
     [self configUI];
