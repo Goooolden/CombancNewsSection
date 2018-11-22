@@ -77,6 +77,7 @@
     "};";
     for (NewsFileImgsModel *model in self.model.imgs) {
         NSString *imagePath = [NSString stringWithFormat:@"%@%@", NewsImageURL, model.path];
+        NSLog(@"imagePath--%@",imagePath);
         NSString *imageStr = [NSString stringWithFormat:@"<img src=\"%@\" onload=\"%@\" style= height=\"250px\"; width=\"100%%\"", imagePath,onload];
         [body appendFormat:@"<div class=\"imageList\"><br>%@</div>",imageStr];
     }

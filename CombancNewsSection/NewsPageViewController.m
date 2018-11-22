@@ -42,6 +42,10 @@
     [[NSUserDefaults standardUserDefaults] setObject:token forKey:NewsToken];
 }
 
+- (void)setBaseUrl:(NSString *)baseUrl {
+    [[NSUserDefaults standardUserDefaults] setObject:baseUrl forKey:NewsBaseUrl];
+}
+
 - (NSArray *)titles {
     return @[@"教学",@"公示",@"考试",@"教育"];
 }
